@@ -1,4 +1,4 @@
-setwd("~/research/gcp/knn")
+setwd("~/research/gcp/econoknn")
 
 source("knnalg2.R")
 
