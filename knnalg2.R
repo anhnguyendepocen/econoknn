@@ -13,7 +13,7 @@ all.smooth <- function(df, xvar, yvars, groupvars, span=.3) {
     for (group in unique(groups)) {
         subdf <- df[groups == group,]
         for (yvar in yvars)
-            subdf[groups == group, yvar] <- lowess(subdf[, xvar], subdf[, yvar], f=span)$y
+            df[groups == group, yvar] <- lowess(subdf[, xvar], subdf[, yvar], f=span)$y
     }
 
     df
