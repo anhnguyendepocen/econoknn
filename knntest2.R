@@ -69,10 +69,15 @@ for (zz1 in 1:3) {
 
 results$income <- factor(results$income, rev(sort(unique(results$income))))
 
-ggplot(results, aes(tas, deathrate)) +
+results$x <- results$tas
+results$y <- results$deathrate
+results$ymin <- results$deathrate - sqrt(results$var)
+results$ymax <- results$deathrate - sqrt(results$var)
+
+ggplot.smooth(results) +
     facet_grid(income ~ climtas) +
     xlab("Temperature") + ylab("Death Rate") +
-    geom_smooth() + scale_x_continuous(expand=c(0, 0)) + theme_minimal()
+    scale_x_continuous(expand=c(0, 0)) + theme_minimal()
 ggsave("knn-nonant.pdf", width=7, height=5)
 
 ## Split out by country
