@@ -20,8 +20,8 @@ ggplot.smooth <- function(df) {
                       ymax=gg1$data[[2]]$y)
 
     ## use the loess data to add the 'ribbon' to plot
-    ggplot(df, aes(x, y)) +
-        geom_line() +
+    ggplot() +
+        geom_line(data=df, aes(x=x , y=y)) +
         geom_ribbon(data=df2, aes(x=x, ymin=ymin, ymax=ymax),
                     fill="grey", alpha=0.4)
 }
