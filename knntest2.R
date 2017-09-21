@@ -69,13 +69,13 @@ for (zz1 in 1:3) {
 
 results$income <- factor(results$income, rev(sort(unique(results$income))))
 
-results$x <- results$tas
-results$y <- results$deathrate
 results$ymin <- results$deathrate - sqrt(results$var)
-results$ymax <- results$deathrate - sqrt(results$var)
+results$ymax <- results$deathrate + sqrt(results$var)
 
-ggplot.smooth(results) +
+ggplot(all.smooth(results, 'tas', c('deathrate', 'ymin', 'ymax'), c('climtas', 'income')), aes(x=tas)) +
     facet_grid(income ~ climtas) +
+    geom_line(aes(y=deathrate)) +
+    geom_ribbon(aes(ymin=ymin, ymax=ymax), alpha=.4) +
     xlab("Temperature") + ylab("Death Rate") +
     scale_x_continuous(expand=c(0, 0)) + theme_minimal()
 ggsave("knn-nonant.pdf", width=7, height=5)
@@ -86,6 +86,8 @@ df$myiso <- df$iso
 df$myiso[nchar(df$iso) == 2] <- "EUR"
 
 for (myiso in unique(df$myiso)) {
+    if (myiso == "JPN")
+        next
     subdf <- df[df$myiso == myiso,]
 
     get.knn.beta <- function(income.rank, climtas.rank, temp.rank) {
@@ -126,10 +128,15 @@ for (myiso in unique(df$myiso)) {
 
     results$income <- factor(results$income, rev(sort(unique(results$income))))
 
-    ggplot(results, aes(tas, deathrate)) +
+    results$x <- results$tas
+    results$y <- results$deathrate
+    results$ymin <- results$deathrate - sqrt(results$var)
+    results$ymax <- results$deathrate + sqrt(results$var)
+
+    ggplot.smooth(results) +
         facet_grid(income ~ climtas) +
         xlab("Temperature") + ylab("Death Rate") +
-        geom_smooth() + scale_x_continuous(expand=c(0, 0)) + theme_minimal()
+        scale_x_continuous(expand=c(0, 0)) + theme_minimal()
     ggsave(paste0("knn-nonant-", myiso, ".pdf"), width=7, height=5)
 
 }
