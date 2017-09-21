@@ -5,7 +5,7 @@ save.demean <- function(outfile, df, ycol, xcol, factorouts) {
     ta.save.demeaned(outfile, df, ycol, c(xcol, '.one.'), factorouts)
 }
 
-all.smooth <- function(df, xvar, yvars, groupvars) {
+all.smooth <- function(df, xvar, yvars, groupvars, span=.3) {
     groups <- ""
     for (groupvar in groupvars)
         groups <- paste(groups, df[, groupvar])
@@ -13,7 +13,7 @@ all.smooth <- function(df, xvar, yvars, groupvars) {
     for (group in unique(groups)) {
         subdf <- df[groups == group,]
         for (yvar in yvars)
-            subdf[groups == group, yvar] <- loess(as.formula(paste(yvar, "~", xvar)), subdf)
+            subdf[groups == group, yvar] <- lowess(subdf[, xvar], subdf[, yvar], f=span)
     }
 
     df
