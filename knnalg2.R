@@ -21,7 +21,7 @@ ggplot.smooth <- function(df) {
 
     ## use the loess data to add the 'ribbon' to plot
     ggplot() +
-        geom_line(data=df, aes(x=x , y=y)) +
+        geom_smooth(data=df, aes(x=x, y=y), method="loess", se=F) +
         geom_ribbon(data=df2, aes(x=x, ymin=ymin, ymax=ymax),
                     fill="grey", alpha=0.4)
 }
