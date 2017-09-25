@@ -1,0 +1,5 @@
+When doing KNN, take all values within largest chunks from any FE if
+taking 1 values -- Note that means can't put in year FE and region FE,
+only year x region FE.
+
+Write it up.
