@@ -5,3 +5,16 @@ save.demean <- function(outfile, df, ycol, xcol, factorouts) {
     ta.save.demeaned(outfile, df, ycol, c(xcol, '.one.'), factorouts)
 }
 
+all.smooth <- function(df, xvar, yvars, groupvars, span=.3) {
+    groups <- ""
+    for (groupvar in groupvars)
+        groups <- paste(groups, df[, groupvar])
+
+    for (group in unique(groups)) {
+        subdf <- df[groups == group,]
+        for (yvar in yvars)
+            df[groups == group, yvar] <- lowess(subdf[, xvar], subdf[, yvar], f=span)$y
+    }
+
+    df
+}
