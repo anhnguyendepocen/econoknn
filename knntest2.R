@@ -128,13 +128,13 @@ for (myiso in unique(df$myiso)) {
 
     results$income <- factor(results$income, rev(sort(unique(results$income))))
 
-    results$x <- results$tas
-    results$y <- results$deathrate
     results$ymin <- results$deathrate - sqrt(results$var)
     results$ymax <- results$deathrate + sqrt(results$var)
 
-    ggplot.smooth(results) +
+    ggplot(all.smooth(results, 'tas', c('deathrate', 'ymin', 'ymax'), c('climtas', 'income')), aes(x=tas)) +
         facet_grid(income ~ climtas) +
+        geom_line(aes(y=deathrate)) +
+        geom_ribbon(aes(ymin=ymin, ymax=ymax), alpha=.4) +
         xlab("Temperature") + ylab("Death Rate") +
         scale_x_continuous(expand=c(0, 0)) + theme_minimal()
     ggsave(paste0("knn-nonant-", myiso, ".pdf"), width=7, height=5)
@@ -168,7 +168,13 @@ right <- get.knn.curve(20, 40, 11)
 left <- get.knn.curve(20, 0, 11)
 results <- rbind(right, left[-1,])
 
-ggplot(results, aes(tas, deathrate)) +
+results$ymin <- results$deathrate - sqrt(results$var)
+results$ymax <- results$deathrate + sqrt(results$var)
+results$group <- T
+
+ggplot(all.smooth(results, 'tas', c('deathrate', 'ymin', 'ymax'), 'group'), aes(x=tas)) +
+    geom_line(aes(y=deathrate)) +
+    geom_ribbon(aes(ymin=ymin, ymax=ymax), alpha=.4) +
     xlab("Temperature") + ylab("Death Rate") +
-    geom_smooth() + scale_x_continuous(expand=c(0, 0)) + theme_minimal()
+    scale_x_continuous(expand=c(0, 0)) + theme_minimal()
 ggsave(paste0("knn-uninteracted.pdf"), width=7, height=5)
