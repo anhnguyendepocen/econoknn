@@ -28,6 +28,9 @@ KK <- 750
 
 get.knn.beta <- function(income.rank, climtas.rank, temp.rank) {
     dists <- (income.rank - df$income.rank)^2 + (climtas.rank - df$climtas.rank)^2 + (temp.rank - df$temp.rank)^2
+    adm1order <- df$adm1[order(dists)[1:KK]]
+    adm1order <- adm1order[!duplicated(adm1order)]
+    
     mod <- lm(dmyy ~ 0 + dmxx, df[order(dists)[1:KK],])
     c(mod$coefficients[1], vcov(mod))
 }
